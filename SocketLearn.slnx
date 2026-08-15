@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Server/Server.vcxproj" Id="f10e85bd-6c2e-4f92-9141-e693acfb9dcf" />
+  <Project Path="SocketLearn.vcxproj" Id="70ba2480-b08c-44ef-ac24-a4fe85631e41" />
+</Solution>
