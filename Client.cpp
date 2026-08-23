@@ -3,13 +3,10 @@
 static void recvData(SOCKET& s)
 {
 	char szBuffer[iPacketSize] = {};
-	int iRecv = { recv(s,szBuffer,sizeof szBuffer,0) };
-	if (iRecv <= 0)
-		return;
 	while (1)
 	{
 		ZeroMemory(szBuffer, sizeof szBuffer);
-		iRecv = { recv(s, szBuffer, sizeof szBuffer, 0) };
+		int iRecv = { recv(s, szBuffer, sizeof szBuffer, 0) };
 		if (!iRecv)
 		{
 			std::cout << "Server Disconnect" << std::endl;
@@ -31,7 +28,7 @@ static void recvData(SOCKET& s)
 int main()
 {
 	char szIP[iPacketSize] = {}, szName[iPacketSize] = {};
-	
+
 
 	std::cout << "Name : ";
 	std::cin >> szName;
@@ -41,7 +38,7 @@ int main()
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa))
 		assert(false && "WSAStartup Error");
-	
+
 	SOCKET server = { socket(AF_INET, SOCK_STREAM, IPPROTO_TCP) };
 
 	SOCKADDR_IN addr = { 0 };
@@ -54,11 +51,13 @@ int main()
 
 	std::thread(recvData, std::ref(server)).detach();
 
+	std::cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+
 	while (1)
 	{
 		ZeroMemory(szName, sizeof szName);
 		std::cout << "Message : ";
-		std::cin >> szName;
+		std::cin.getline(szName, iPacketSize);
 		send(server, szName, sizeof szName, 0);
 	}
 }

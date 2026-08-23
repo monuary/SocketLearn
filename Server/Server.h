@@ -7,6 +7,8 @@
 #include<vector>					//vector
 #include<utility>					//pair
 #include<thread>					//thread
+#include<mutex>						//mutex
+#include<string>					//getline
 #include<assert.h>
 
 class CLIENT	// structure is better
@@ -32,5 +34,6 @@ public:
 typedef std::pair<CLIENT, std::string>pii;
 std::vector<pii>vecClient;
 
-constexpr int iPort = { 8080 };			// port address
-constexpr int iPacketSize = { 1024 };
+constexpr int	iPort = { 8080 };			// port address
+constexpr int	iPacketSize = { 1024 };
+std::mutex		Mutex;

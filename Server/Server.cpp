@@ -25,7 +25,12 @@ static void recvData(SOCKET s, int iNum)
 			else std::cout << "recv error : " << iError << std::endl;
 			break;
 		}
-		std::cout << vecClient[iNum].second << " : " << szBuffer << std::endl;
+		std::lock_guard<std::mutex> lock(Mutex);
+		std::cout << std::endl
+			<< vecClient[iNum].second
+			<< " : "
+			<< szBuffer
+			<< std::endl;
 	}
 	closesocket(s);
 }
@@ -61,15 +66,19 @@ int main()
 
 	std::thread(ACCEPT, std::ref(server)).detach();
 	
-	char szName[iPacketSize] = {}, szMessage[iPacketSize] = {};
+	std::string strName, strMessage;
 
 	while (1)	//message to a Client
 	{
-		ZeroMemory(szName, sizeof szName);
-		ZeroMemory(szMessage, sizeof szMessage);
-		std::cin >> szName >> szMessage;
+		std::cout << "Target : ";
+		std::cin >> strName;
+		std::cout << "Message : ";
+		std::getline(std::cin >> std::ws, strMessage);
 		for (size_t i = {}; i < vecClient.size(); ++i)
-			if (!strcmp(vecClient[i].second.c_str(), szName))
-				send(*vecClient[i].first.GetSocketPtr(), szMessage, sizeof szMessage, 0);
+			if (vecClient[i].second.c_str() == strName)
+			{
+				send(*vecClient[i].first.GetSocketPtr(), strMessage.c_str(), static_cast<int>(strMessage.size() + 1), 0);
+				break;
+			}
 	}
 }
